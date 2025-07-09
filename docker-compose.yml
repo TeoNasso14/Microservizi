@@ -30,7 +30,6 @@ services:
     # Bind-mount the whole project into /app
     volumes:
       - ./services/todo-service:/app:cached
-      # avoid mounting target so Maven can write it
       - ~/.m2:/root/.m2:delegated
     environment:
       SPRING_DATASOURCE_URL:      "jdbc:postgresql://db:5432/${DB_NAME:-exampledb}"

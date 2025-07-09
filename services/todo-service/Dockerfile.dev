@@ -12,4 +12,6 @@ RUN mvn dependency:get \
 EXPOSE 8080 5005
 
 # Default command to start in dev mode
-CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.fork=false"]
+CMD ["mvn", "spring-boot:run", \
+     "-Dspring-boot.run.fork=false", \
+     "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
