@@ -1,0 +1,15 @@
+# Dockerfile.dev
+FROM maven:3.9.9-eclipse-temurin-17-noble
+
+WORKDIR /app
+
+# Install the Spring Boot DevTools auto-restart feature
+# (optional, but highly recommended for live-reload of classes/resources)
+RUN mvn dependency:get \
+    -Dartifact=org.springframework.boot:spring-boot-devtools:3.1.0
+
+# Expose both HTTP and the JDWP debug port (for remote debugging if you like)
+EXPOSE 8080 5005
+
+# Default command to start in dev mode
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.fork=false"]

@@ -11,3 +11,7 @@ spring:
         format_sql: true
 server:
   port: ${SERVICE_A_PORT:8080}
+
+# jwt:
+#   secret: "${JWT_SECRET:secret}"
+#   validity-ms: ${JWT_VALIDITY_MS:86400000}
