@@ -7,7 +7,6 @@ services:
       POSTGRES_DB:       ${DB_NAME:-exampledb}
       POSTGRES_USER:     ${DB_USER:-example_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret_password}
-
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
@@ -22,31 +21,22 @@ services:
       - backend
 
   todo-service:
-    image: todo-service-dev:latest   # name we’ll build locally
+    image: todo-service:latest
     container_name: todo_service
-    build:
-      context: ./services/todo-service
-      dockerfile: Dockerfile.dev
-    # Bind-mount the whole project into /app
-    volumes:
-      - ./services/todo-service:/app:cached
-      - ~/.m2:/root/.m2:delegated
+    # configura solo le variabili comuni
     environment:
       SPRING_DATASOURCE_URL:      "jdbc:postgresql://db:5432/${DB_NAME:-exampledb}"
       SPRING_DATASOURCE_USERNAME: ${DB_USER:-example_user}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-secret_password}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${HIBERNATE_DDL_AUTO:-update}
-    ports:
-      - "${TODO_SERVICE_PORT:-8080}:8080"
-      - "5005:5005"
-    networks:
-      - backend
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - backend
 
 volumes:
-  db_data: 
+  db_data:
 
 networks:
   backend:

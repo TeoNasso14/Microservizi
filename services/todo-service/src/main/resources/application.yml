@@ -1,17 +1,15 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:db}:${DB_PORT:5433}/${DB_NAME:nexi_db}
-    username: ${DB_USER:jakala}
-    password: ${DB_PASSWORD:jakala}
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        "[format_sql]": true
-server:
-  port: ${SERVICE_A_PORT:8080}
+        format_sql: true
 
-# jwt:
-#   secret: "${JWT_SECRET:secret}"
-#   validity-ms: ${JWT_VALIDITY_MS:86400000}
+server:
+  port: ${TODO_SERVICE_PORT:8080}
+
+# eventuali proprietà comuni (log, jackson, ecc.)
+logging:
+  level:
+    root: INFO

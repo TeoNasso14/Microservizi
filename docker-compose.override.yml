@@ -1,0 +1,13 @@
+services:
+  todo-service:
+    build:
+      context: ./services/todo-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${TODO_SERVICE_PORT:-8080}:8080"
+      - "5005:5005"
+    volumes:
+      - ./services/todo-service:/app:cached
+      - ~/.m2:/root/.m2:delegated
+    environment:
+      SPRING_PROFILES_ACTIVE: dev

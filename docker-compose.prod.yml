@@ -1,0 +1,8 @@
+services:
+  todo-service:
+    image: todo-service:latest   # dalla build prod multi-stage
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    restart: unless-stopped
