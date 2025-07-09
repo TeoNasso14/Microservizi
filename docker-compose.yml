@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-exampledb}
+      POSTGRES_USER:     ${DB_USER:-example_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret_password}
+
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-example_user} -d ${DB_NAME:-exampledb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  todo-service:
+    build:
+      context: ./services/todo-service
+      dockerfile: Dockerfile
+    image: todo-service:latest
+    container_name: todo_service
+    environment:
+      SPRING_DATASOURCE_URL:      "jdbc:postgresql://db:5432/${DB_NAME:-exampledb}"
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-example_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-secret_password}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${HIBERNATE_DDL_AUTO:-update}
+    ports:
+      - "${TODO_SERVICE_PORT:-8080}:8080"
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data: 
+
+networks:
+  backend:

@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:db}:${DB_PORT:5433}/${DB_NAME:nexi_db}
+    username: ${DB_USER:jakala}
+    password: ${DB_PASSWORD:jakala}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: ${SERVICE_A_PORT:8080}
