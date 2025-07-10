@@ -7,9 +7,12 @@ import com.example.todo.security.JwtUtil;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,6 +23,8 @@ public class AuthController {
     UserDetailService uds;
     @Autowired
     JwtUtil jwt;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AppUser r) {
@@ -29,11 +34,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody AppUser r) {
+    public ResponseEntity<?> register(@RequestBody AppUser r) {
 
-        uds.saveUser(r);
+        if (uds.userExists(r.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username già esistente");
+        }
+        // crea e salva l’utente con password encoded
+        AppUser user = new AppUser();
+        user.setUsername(r.getUsername());
+        user.setPassword(passwordEncoder.encode(r.getPassword()));
+        uds.saveUser(user);
 
-        return new AuthResponse(jwt.generateToken(new org.springframework.security.core.userdetails.User(r.getUsername(), r.getPassword(), java.util.Collections.emptyList())));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(jwt.generateToken(new org.springframework.security.core.userdetails.User(r.getUsername(), r.getPassword(), java.util.Collections.emptyList()))));
     }
 
 }

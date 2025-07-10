@@ -23,9 +23,6 @@ public class UserDetailService implements UserDetailsService {
     }
 
     public void saveUser(AppUser user) {
-        if (userExists(user.getUsername())) {
-            throw new RuntimeException("User already exists");
-        }
         repo.save(user);
     }
     public boolean userExists(String username) {
