@@ -1,17 +1,17 @@
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:db}:${DB_PORT:5432}/${DB_NAME:exampledb}
     username: ${DB_USER:example_user}
     password: ${DB_PASSWORD:secret_password}
 
-# facciamo vedere tutto in console durante lo sviluppo
 logging:
   level:
     root: DEBUG
 
-# abilitiamo tutti gli endpoint di Actuator
 management:
   endpoints:
     web:

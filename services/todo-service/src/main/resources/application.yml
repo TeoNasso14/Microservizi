@@ -9,6 +9,9 @@ spring:
 server:
   port: ${TODO_SERVICE_PORT:8080}
 
+jwt:
+  secret: ${TODO_JWT_SECRET:defaultSecret}
+  expiration: ${TODO_JWT_EXPIRATION:3600} # in seconds
 # eventuali proprietà comuni (log, jackson, ecc.)
 logging:
   level:
